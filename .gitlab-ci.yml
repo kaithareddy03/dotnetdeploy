@@ -1,0 +1,104 @@
+stages:
+  - build
+  - security_scan
+  - package
+  - deploy
+
+variables:
+  BUILD_PATH: "RSign.SendAPI/RSign.SendAPI.csproj"
+  PUBLISH_DIR: "publish_output"
+  SERVER_NAME: "YOUR_SERVER_NAME"
+
+before_script:
+  - echo "Starting pipeline..."
+
+# ---------------- BUILD ----------------
+build_job:
+  stage: build
+  tags:
+    - windows
+  script:
+    - echo "Restoring..."
+    - dotnet restore "$BUILD_PATH"
+
+    - echo "Building..."
+    - dotnet build "$BUILD_PATH" --configuration Release
+
+    - echo "Publishing..."
+    - dotnet publish "$BUILD_PATH" -c Release -o $PUBLISH_DIR
+
+  artifacts:
+    paths:
+      - $PUBLISH_DIR
+
+# ---------------- SECURITY ----------------
+sast_scan:
+  stage: security_scan
+  image: registry.gitlab.com/gitlab-org/security-products/analyzers/dotnet:latest
+  script:
+    - echo "Running SAST scan..."
+  allow_failure: true
+
+dependency_scan:
+  stage: security_scan
+  image: registry.gitlab.com/gitlab-org/security-products/analyzers/dependency-scanning:latest
+  script:
+    - echo "Running Dependency scan..."
+  allow_failure: true
+
+# ---------------- PACKAGE ----------------
+package_job:
+  stage: package
+  tags:
+    - windows
+  script:
+    - echo "Creating ZIP..."
+    - powershell Compress-Archive -Path $PUBLISH_DIR\* -DestinationPath SendcoreApi.zip
+
+  artifacts:
+    paths:
+      - SendcoreApi.zip
+
+# ---------------- DEPLOY ----------------
+deploy_job:
+  stage: deploy
+  tags:
+    - windows
+  script:
+    - echo "Deploying to single server..."
+
+    - powershell |
+        $password = $env:DEPLOY_PASSWORD
+        $SecurePassword = ConvertTo-SecureString $password -AsPlainText -Force
+        $User = $env:DEPLOY_USER
+        $cred = New-Object System.Management.Automation.PSCredential ($User, $SecurePassword)
+
+        $server = $env:SERVER_NAME
+
+        # Backup + Stop IIS
+        Invoke-Command -ComputerName $server -Credential $cred -ScriptBlock {
+
+            Copy-Item "C:\Projects\RSignSendAPI" `
+              -Destination "C:\jenkins\backup\RSignSendAPI_backup" `
+              -Recurse -Force
+
+            Stop-WebAppPool -Name "SendAPI"
+            Stop-Website -Name "SendAPI"
+
+            Remove-Item C:\jenkins\new\* -Recurse -Force -ErrorAction SilentlyContinue
+        }
+
+        # Copy ZIP
+        $session = New-PSSession -ComputerName $server -Credential $cred
+        Copy-Item -Path "SendcoreApi.zip" -Destination "C:\jenkins\new\" -ToSession $session
+
+        # Deploy
+        Invoke-Command -Session $session -ScriptBlock {
+
+            Expand-Archive -Path C:\jenkins\new\SendcoreApi.zip `
+                           -DestinationPath C:\Projects\RSignSendAPI `
+                           -Force
+
+            Start-WebAppPool -Name "SendAPI"
+            Start-Website -Name "SendAPI"
+        }
