@@ -1,0 +1,39 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>  
+    <PackageReference Include="Microsoft.AspNet.WebApi.Core" Version="5.3.0" />
+    <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="8.0.1" />
+    <PackageReference Include="StackExchange.Redis" Version="2.7.17" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+	<PackageReference Include="System.ServiceModel.Primitives" Version="4.10.3" />
+	<PackageReference Include="System.ServiceModel.Http" Version="4.10.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\RSign.Authentication\RSign.Authentication.csproj" />
+    <ProjectReference Include="..\RSign.Common\RSign.Common.csproj" />
+    <ProjectReference Include="..\RSign.ManageDocument\RSign.ManageDocument.csproj" />
+    <ProjectReference Include="..\RSign.Models\RSign.Models.csproj" />
+    <ProjectReference Include="..\RSign.Notification\RSign.Notification.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+	  <Reference Include="EpicSDK">
+	    <HintPath>..\CommonFiles\EpicSDK\EpicSDK.dll</HintPath>
+	  </Reference>
+	  <Reference Include="GoogleDriveDownload">
+		  <HintPath>..\CommonFiles\ThirdPartyDlls\GoogleDriveDownload.dll</HintPath>
+	  </Reference>
+	  <Reference Include="System.ServiceModel">
+	    <HintPath>..\CommonFiles\ThirdPartyDlls\System.ServiceModel.dll</HintPath>
+	  </Reference>
+  </ItemGroup>
+
+</Project>
