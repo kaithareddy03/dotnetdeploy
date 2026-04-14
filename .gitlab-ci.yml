@@ -5,6 +5,8 @@ debug_job:
   stage: debug
   tags:
     - windows
+  variables:
+    GIT_STRATEGY: none   # 🚀 THIS IS KEY
   script:
     - echo "Checking dotnet..."
     - dotnet --version
