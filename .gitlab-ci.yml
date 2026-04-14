@@ -1,84 +1,10 @@
 stages:
-  - build
-  - package
-  - deploy
+  - debug
 
-variables:
-  BUILD_PATH: "RSign.SendAPI.csproj"
-  PUBLISH_DIR: "publish_output"
-  ZIP_FILE: "SendcoreApi.zip"
-
-before_script:
-  - echo "Starting GitLab pipeline..."
-
-# ---------------- BUILD ----------------
-build_job:
-  stage: build
+debug_job:
+  stage: debug
   tags:
     - windows
   script:
-    - echo "Restoring NuGet packages..."
-    - dotnet restore %BUILD_PATH%
-
-    - echo "Building project..."
-    - dotnet build %BUILD_PATH% --configuration Release
-
-    - echo "Publishing project..."
-    - dotnet publish %BUILD_PATH% -c Release -o %PUBLISH_DIR%
-
-  artifacts:
-    paths:
-      - %PUBLISH_DIR%
-
-# ---------------- PACKAGE ----------------
-package_job:
-  stage: package
-  tags:
-    - windows
-  script:
-    - echo "Creating ZIP package..."
-    - powershell Compress-Archive -Path %PUBLISH_DIR%\* -DestinationPath %ZIP_FILE%
-
-  artifacts:
-    paths:
-      - %ZIP_FILE%
-
-# ---------------- DEPLOY ----------------
-deploy_job:
-  stage: deploy
-  tags:
-    - windows
-  script:
-    - echo "Starting deployment..."
-
-    - powershell |
-        $ErrorActionPreference = "Stop"
-
-        $deployPath = "C:\Projects\RSignSendAPI"
-        $backupPath = "C:\jenkins\backup\RSignSendAPI_$(Get-Date -Format 'yyyyMMdd_HHmmss')"
-        $zipPath = "$env:CI_PROJECT_DIR\SendcoreApi.zip"
-        $tempPath = "C:\jenkins\new\SendcoreApi"
-
-        Write-Output "Stopping IIS..."
-
-        Stop-WebAppPool -Name "SendAPI"
-        Stop-Website -Name "SendAPI"
-
-        Write-Output "Taking backup..."
-        Copy-Item $deployPath $backupPath -Recurse -Force
-
-        Write-Output "Cleaning temp..."
-        Remove-Item C:\jenkins\new\* -Recurse -Force -ErrorAction SilentlyContinue
-
-        Write-Output "Extracting new build..."
-        Expand-Archive -Path $zipPath -DestinationPath $tempPath -Force
-
-        Write-Output "Deploying files..."
-        Copy-Item "$tempPath\*" -Destination $deployPath -Recurse -Force
-
-        Write-Output "Starting IIS..."
-
-        Start-WebAppPool -Name "SendAPI"
-        Start-Website -Name "SendAPI"
-
-        Write-Output "Deployment completed successfully!"
+    - echo "Checking dotnet..."
+    - dotnet --version
