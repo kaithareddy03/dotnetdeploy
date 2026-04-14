@@ -1,12 +1,60 @@
 stages:
-  - debug
+  - build
+  - security
+  - deploy
 
-debug_job:
-  stage: debug
+variables:
+  GIT_STRATEGY: none
+
+# ---------------- BUILD ----------------
+build_job:
+  stage: build
   tags:
     - windows
-  variables:
-    GIT_STRATEGY: none   # 🚀 THIS IS KEY
   script:
-    - echo "Checking dotnet..."
-    - dotnet --version
+    - powershell |
+        $projectPath = "D:\dotnetdeploy"
+        cd $projectPath
+
+        dotnet restore
+        dotnet build --configuration Release
+        dotnet publish -c Release -o publish
+
+# ---------------- SECURITY SCAN ----------------
+security_scan:
+  stage: security
+  tags:
+    - windows
+  script:
+    - powershell |
+        $projectPath = "D:\dotnetdeploy"
+        cd $projectPath
+
+        Write-Output "Running dependency vulnerability scan..."
+
+        # Install tool if not exists
+        dotnet tool install --global dotnet-outdated-tool || echo "Already installed"
+
+        # Run scan
+        dotnet outdated --severity Critical
+
+# ---------------- DEPLOY ----------------
+deploy_job:
+  stage: deploy
+  tags:
+    - windows
+  script:
+    - powershell |
+        $deployPath = "C:\Projects\RSignSendAPI"
+        $backupPath = "C:\jenkins\backup\RSignSendAPI_$(Get-Date -Format 'yyyyMMdd_HHmmss')"
+        $publishPath = "D:\dotnetdeploy\publish"
+
+        Stop-WebAppPool -Name "SendAPI"
+        Stop-Website -Name "SendAPI"
+
+        Copy-Item $deployPath $backupPath -Recurse -Force
+
+        Copy-Item "$publishPath\*" -Destination $deployPath -Recurse -Force
+
+        Start-WebAppPool -Name "SendAPI"
+        Start-Website -Name "SendAPI"
