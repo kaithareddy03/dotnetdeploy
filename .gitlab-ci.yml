@@ -21,14 +21,14 @@ build_job:
         dotnet sonarscanner begin `
           /k:"rsign-api" `
           /d:sonar.host.url="http://rsignapp34.use.rpost.net:9047" `
-          /d:sonar.login="YOUR_TOKEN"
+          /d:sonar.login="sqp_93c25decbd5ffac63893375aa080bfef5c1b3e18"
 
         dotnet restore
         dotnet build --configuration Release
         dotnet publish -c Release -o publish
 
         dotnet sonarscanner end `
-          /d:sonar.login="YOUR_TOKEN"
+          /d:sonar.login="sqp_93c25decbd5ffac63893375aa080bfef5c1b3e18"
 
 # ---------------- SECURITY SCAN ----------------
 security_scan:
