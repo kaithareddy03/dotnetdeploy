@@ -6,7 +6,7 @@ stages:
 variables:
   GIT_STRATEGY: none
 
-# ---------------- BUILD ----------------
+# ---------------- BUILD + SONAR ----------------
 build_job:
   stage: build
   tags:
@@ -16,9 +16,19 @@ build_job:
         $projectPath = "D:\dotnetdeploy"
         cd $projectPath
 
+        Write-Output "Starting SonarQube analysis..."
+
+        dotnet sonarscanner begin `
+          /k:"rsign-api" `
+          /d:sonar.host.url="http://rsignapp34.use.rpost.net:9047" `
+          /d:sonar.login="YOUR_TOKEN"
+
         dotnet restore
         dotnet build --configuration Release
         dotnet publish -c Release -o publish
+
+        dotnet sonarscanner end `
+          /d:sonar.login="YOUR_TOKEN"
 
 # ---------------- SECURITY SCAN ----------------
 security_scan:
@@ -32,8 +42,13 @@ security_scan:
 
         Write-Output "Running dependency vulnerability scan..."
 
-        # Install tool if not exists
-        dotnet tool install --global dotnet-outdated-tool || echo "Already installed"
+        # Install tool if not exists (PowerShell-safe)
+        if (-not (dotnet tool list -g | Select-String "dotnet-outdated-tool")) {
+            dotnet tool install --global dotnet-outdated-tool
+        }
+
+        # Ensure PATH includes tools
+        $env:PATH += ";$env:USERPROFILE\.dotnet\tools"
 
         # Run scan
         dotnet outdated --severity Critical
@@ -49,12 +64,18 @@ deploy_job:
         $backupPath = "C:\jenkins\backup\RSignSendAPI_$(Get-Date -Format 'yyyyMMdd_HHmmss')"
         $publishPath = "D:\dotnetdeploy\publish"
 
+        Write-Output "Stopping IIS..."
         Stop-WebAppPool -Name "SendAPI"
         Stop-Website -Name "SendAPI"
 
+        Write-Output "Taking backup..."
         Copy-Item $deployPath $backupPath -Recurse -Force
 
+        Write-Output "Deploying new build..."
         Copy-Item "$publishPath\*" -Destination $deployPath -Recurse -Force
 
+        Write-Output "Starting IIS..."
         Start-WebAppPool -Name "SendAPI"
         Start-Website -Name "SendAPI"
+
+        Write-Output "Deployment completed successfully!"
