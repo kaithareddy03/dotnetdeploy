@@ -13,6 +13,8 @@ build_job:
     - windows
   script:
     - powershell |
+        $ErrorActionPreference = "Stop"
+
         $projectPath = "D:\dotnetdeploy"
         cd $projectPath
 
@@ -37,21 +39,29 @@ security_scan:
     - windows
   script:
     - powershell |
+        $ErrorActionPreference = "Stop"
+
         $projectPath = "D:\dotnetdeploy"
         cd $projectPath
 
         Write-Output "Running dependency vulnerability scan..."
 
-        # Install tool if not exists (PowerShell-safe)
+        # Install tool if not exists
         if (-not (dotnet tool list -g | Select-String "dotnet-outdated-tool")) {
             dotnet tool install --global dotnet-outdated-tool
         }
 
-        # Ensure PATH includes tools
+        # Fix PATH
         $env:PATH += ";$env:USERPROFILE\.dotnet\tools"
 
         # Run scan
         dotnet outdated --severity Critical
+
+        # 🔥 Fail pipeline if vulnerabilities found
+        if ($LASTEXITCODE -ne 0) {
+            Write-Error "Critical vulnerabilities detected!"
+            exit 1
+        }
 
 # ---------------- DEPLOY ----------------
 deploy_job:
@@ -60,6 +70,8 @@ deploy_job:
     - windows
   script:
     - powershell |
+        $ErrorActionPreference = "Stop"
+
         $deployPath = "C:\Projects\RSignSendAPI"
         $backupPath = "C:\jenkins\backup\RSignSendAPI_$(Get-Date -Format 'yyyyMMdd_HHmmss')"
         $publishPath = "D:\dotnetdeploy\publish"
