@@ -6,8 +6,19 @@ build_job:
   tags:
     - linux
   script:
-    - echo "STARTED"
-    - date
-    - whoami
-    - pwd
-    - ls -la
+    - set -x
+    - echo "START BUILD"
+
+    - cd /var/www/dotnetdeploy
+
+    - echo "Updating latest code..."
+    - git reset --hard
+    - git clean -fd
+    - git pull origin main
+
+    - echo "Building project..."
+    - dotnet restore RSign.SendAPI.csproj
+    - dotnet build RSign.SendAPI.csproj --configuration Release
+
+    - echo "Publishing..."
+    - dotnet publish RSign.SendAPI.csproj -c Release -o publish
