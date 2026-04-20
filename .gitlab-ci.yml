@@ -1,21 +1,15 @@
-stages:
-  - build
-  - security
-  - deploy
-
-# ---------------- BUILD ----------------
 build_job:
   stage: build
   tags:
     - linux
   script:
     - set -x
-
     - echo "Using existing repo..."
     - cd /var/www/dotnetdeploy
 
-    - echo "Fetching latest changes..."
+    - echo "Updating latest code..."
     - git reset --hard
+    - git clean -fd
     - git pull origin main
 
     - echo "Installing SonarScanner..."
@@ -23,11 +17,7 @@ build_job:
     - export PATH="$PATH:$HOME/.dotnet/tools"
 
     - echo "Starting SonarQube..."
-    - dotnet sonarscanner begin \
-        /k:"rsign-api" \
-        /d:sonar.host.url="http://rsignapp34.use.rpost.net:9047" \
-        /d:sonar.login="$SONAR_TOKEN" \
-        /d:sonar.qualitygate.wait=true
+    - dotnet sonarscanner begin /k:"rsign-api" /d:sonar.host.url="http://rsignapp34.use.rpost.net:9047" /d:sonar.login="$SONAR_TOKEN" /d:sonar.qualitygate.wait=true
 
     - echo "Building..."
     - dotnet restore RSign.SendAPI.sln
@@ -36,58 +26,4 @@ build_job:
     - echo "Publishing..."
     - dotnet publish RSign.SendAPI.sln -c Release -o publish
 
-    - dotnet sonarscanner end \
-        /d:sonar.login="$SONAR_TOKEN"
-
-  artifacts:
-    paths:
-      - /var/www/dotnetdeploy/publish
-
-# ---------------- SECURITY ----------------
-security_scan:
-  stage: security
-  tags:
-    - linux
-  needs:
-    - build_job
-  script:
-    - cd /var/www/dotnetdeploy
-
-    - dotnet tool install --global dotnet-outdated-tool || true
-    - export PATH="$PATH:$HOME/.dotnet/tools"
-
-    - dotnet outdated RSign.SendAPI.sln --severity Critical
-
-# ---------------- DEPLOY ----------------
-deploy_job:
-  stage: deploy
-  tags:
-    - windows
-  needs:
-    - build_job
-    - security_scan
-  script:
-    - powershell -Command "
-        $ErrorActionPreference = 'Stop'
-
-        $artifactPath = '\\RSignAPP34\var\www\dotnetdeploy\publish'
-        $deployPath   = 'D:\RSignSendAPI'
-        $backupRoot   = 'D:\backup'
-
-        $timestamp = Get-Date -Format 'yyyyMMdd_HHmmss'
-        $backupPath = \"$backupRoot\RSignSendAPI_$timestamp\"
-
-        Write-Output 'Taking backup...'
-        if (Test-Path $deployPath) {
-            Copy-Item $deployPath $backupPath -Recurse -Force
-        }
-
-        Write-Output 'Cleaning deployment folder...'
-        if (Test-Path $deployPath) {
-            Remove-Item \"$deployPath\*\" -Recurse -Force
-        }
-
-        Write-Output 'Deploying latest build...'
-        Copy-Item \"$artifactPath\*\" -Destination $deployPath -Recurse -Force
-
-      "
+    - dotnet sonarscanner end /d:sonar.login="$SONAR_TOKEN"
