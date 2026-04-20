@@ -3,86 +3,88 @@ stages:
   - security
   - deploy
 
-variables:
-  GIT_STRATEGY: none
-
-# ---------------- BUILD + SONAR ----------------
+# ---------------- BUILD (LINUX) ----------------
 build_job:
   stage: build
   tags:
-    - windows
+    - linux
   script:
-    - powershell |
-        $ErrorActionPreference = "Stop"
+    - echo "Cloning repository..."
+    - git clone https://github.com/kaithareddy03/dotnetdeploy.git repo
+    - cd repo
 
-        $projectPath = "D:\dotnetdeploy"
-        cd $projectPath
+    - echo "Installing SonarScanner..."
+    - dotnet tool install --global dotnet-sonarscanner
+    - export PATH="$PATH:$HOME/.dotnet/tools"
 
-        Write-Output "Starting SonarQube analysis..."
+    - echo "Starting SonarQube analysis..."
+    - dotnet sonarscanner begin \
+        /k:"rsign-api" \
+        /d:sonar.host.url="http://rsignapp34.use.rpost.net:9047" \
+        /d:sonar.login="$SONAR_TOKEN"
 
-        dotnet sonarscanner begin `
-          /k:"rsign-api" `
-          /d:sonar.host.url="http://rsignapp34.use.rpost.net:9047" `
-          /d:sonar.login="$env:SONAR_TOKEN"
+    - echo "Building project..."
+    - dotnet restore
+    - dotnet build --configuration Release
+    - dotnet publish -c Release -o publish
 
-        dotnet restore
-        dotnet build --configuration Release
-        dotnet publish -c Release -o publish
+    - echo "Ending SonarQube analysis..."
+    - dotnet sonarscanner end \
+        /d:sonar.login="$SONAR_TOKEN"
 
-        dotnet sonarscanner end `
-          /d:sonar.login="$env:SONAR_TOKEN"
+  artifacts:
+    paths:
+      - repo/publish
 
-# ---------------- SECURITY SCAN ----------------
+# ---------------- SECURITY (LINUX) ----------------
 security_scan:
   stage: security
   tags:
-    - windows
+    - linux
   script:
-    - powershell |
-        $ErrorActionPreference = "Stop"
+    - cd repo
 
-        $projectPath = "D:\dotnetdeploy"
-        cd $projectPath
+    - echo "Installing vulnerability scanner..."
+    - dotnet tool install --global dotnet-outdated-tool || true
+    - export PATH="$PATH:$HOME/.dotnet/tools"
 
-        Write-Output "Running dependency vulnerability scan..."
+    - echo "Running vulnerability scan..."
+    - dotnet outdated --severity Critical
 
-        if (-not (dotnet tool list -g | Select-String "dotnet-outdated-tool")) {
-            dotnet tool install --global dotnet-outdated-tool
-        }
+    - |
+      if [ $? -ne 0 ]; then
+        echo "❌ Critical vulnerabilities found!"
+        exit 1
+      else
+        echo "✅ No critical vulnerabilities"
+      fi
 
-        $env:PATH += ";$env:USERPROFILE\.dotnet\tools"
-
-        dotnet outdated --severity Critical
-
-        if ($LASTEXITCODE -ne 0) {
-            Write-Error "Critical vulnerabilities detected!"
-            exit 1
-        }
-
-# ---------------- DEPLOY ----------------
+# ---------------- DEPLOY (WINDOWS) ----------------
 deploy_job:
   stage: deploy
   tags:
     - windows
+  dependencies:
+    - build_job
   script:
-    - powershell |
-        $ErrorActionPreference = "Stop"
+    - powershell -Command "
+        $ErrorActionPreference = 'Stop'
 
-        $publishPath = "D:\dotnetdeploy\publish"
-        $deployPath  = "D:\inetpub\wwwroot\RSignAPI"
-        $backupRoot  = "D:\backup"
+        $artifactPath = '$env:CI_PROJECT_DIR\repo\publish'
+        $deployPath   = 'D:\RSignSendAPI'
+        $backupRoot   = 'D:\backup'
 
-        $timestamp = Get-Date -Format "yyyyMMdd_HHmmss"
-        $backupPath = "$backupRoot\RSignAPI_$timestamp"
+        $timestamp = Get-Date -Format 'yyyyMMdd_HHmmss'
+        $backupPath = \"$backupRoot\RSignAPI_$timestamp\"
+
+        Write-Output 'Taking backup...'
+        Copy-Item $deployPath $backupPath -Recurse -Force
+
+        Write-Output 'Deploying new build...'
+        Copy-Item \"$artifactPath\*\" -Destination $deployPath -Recurse -Force
 
     
 
-        Write-Output "Taking backup..."
-        Copy-Item $deployPath $backupPath -Recurse -Force
+        Write-Output 'Deployment completed successfully!'
+      "
 
-        Write-Output "Deploying new build..."
-        Copy-Item "$publishPath\*" -Destination $deployPath -Recurse -Force
-
-      
-
-        Write-Output "Deployment completed successfully!"
