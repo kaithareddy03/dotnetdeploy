@@ -1,0 +1,597 @@
+{
+  "format": 1,
+  "restore": {
+    "D:\\JenkinsHome\\workspace\\RSignCoreAPI\\RSign.SendAPI\\RSign.SendAPI.csproj": {}
+  },
+  "projects": {
+    "D:\\JenkinsHome\\workspace\\RSignCoreAPI\\RSign.Authentication\\RSign.Authentication.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\JenkinsHome\\workspace\\RSignCoreAPI\\RSign.Authentication\\RSign.Authentication.csproj",
+        "projectName": "RSign.Authentication",
+        "projectPath": "D:\\JenkinsHome\\workspace\\RSignCoreAPI\\RSign.Authentication\\RSign.Authentication.csproj",
+        "packagesPath": "C:\\Users\\vkaitha\\.nuget\\packages\\",
+        "outputPath": "D:\\JenkinsHome\\workspace\\RSignCoreAPI\\RSign.Authentication\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\vkaitha\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "targetAlias": "net6.0",
+            "projectReferences": {
+              "D:\\JenkinsHome\\workspace\\RSignCoreAPI\\RSign.Models\\RSign.Models.csproj": {
+                "projectPath": "D:\\JenkinsHome\\workspace\\RSignCoreAPI\\RSign.Models\\RSign.Models.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.300"
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "dependencies": {
+            "Microsoft.AspNet.WebApi.Core": {
+              "target": "Package",
+              "version": "[5.3.0, )"
+            },
+            "Microsoft.AspNetCore.Authorization": {
+              "target": "Package",
+              "version": "[8.0.2, )"
+            },
+            "Microsoft.Extensions.Configuration.Abstractions": {
+              "target": "Package",
+              "version": "[7.0.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.300\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\JenkinsHome\\workspace\\RSignCoreAPI\\RSign.Common\\RSign.Common.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\JenkinsHome\\workspace\\RSignCoreAPI\\RSign.Common\\RSign.Common.csproj",
+        "projectName": "RSign.Common",
+        "projectPath": "D:\\JenkinsHome\\workspace\\RSignCoreAPI\\RSign.Common\\RSign.Common.csproj",
+        "packagesPath": "C:\\Users\\vkaitha\\.nuget\\packages\\",
+        "outputPath": "D:\\JenkinsHome\\workspace\\RSignCoreAPI\\RSign.Common\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\vkaitha\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "targetAlias": "net6.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.300"
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "dependencies": {
+            "ChilkatDnCore": {
+              "target": "Package",
+              "version": "[9.50.93, )"
+            },
+            "HtmlAgilityPack": {
+              "target": "Package",
+              "version": "[1.11.46, )"
+            },
+            "NLog": {
+              "target": "Package",
+              "version": "[5.1.1, )"
+            },
+            "NLog.Web.AspNetCore": {
+              "target": "Package",
+              "version": "[5.2.1, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.2, )"
+            },
+            "System.Runtime.Caching": {
+              "target": "Package",
+              "version": "[5.0.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.300\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\JenkinsHome\\workspace\\RSignCoreAPI\\RSign.ManageDocument\\RSign.ManageDocument.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\JenkinsHome\\workspace\\RSignCoreAPI\\RSign.ManageDocument\\RSign.ManageDocument.csproj",
+        "projectName": "RSign.ManageDocument",
+        "projectPath": "D:\\JenkinsHome\\workspace\\RSignCoreAPI\\RSign.ManageDocument\\RSign.ManageDocument.csproj",
+        "packagesPath": "C:\\Users\\vkaitha\\.nuget\\packages\\",
+        "outputPath": "D:\\JenkinsHome\\workspace\\RSignCoreAPI\\RSign.ManageDocument\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\vkaitha\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "targetAlias": "net6.0",
+            "projectReferences": {
+              "D:\\JenkinsHome\\workspace\\RSignCoreAPI\\RSign.Common\\RSign.Common.csproj": {
+                "projectPath": "D:\\JenkinsHome\\workspace\\RSignCoreAPI\\RSign.Common\\RSign.Common.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.300"
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "dependencies": {
+            "AWSSDK.S3": {
+              "target": "Package",
+              "version": "[4.0.13.1, )"
+            },
+            "Aspose.Cells": {
+              "target": "Package",
+              "version": "[23.1.1, )"
+            },
+            "Aspose.PDF": {
+              "target": "Package",
+              "version": "[23.1.0, )"
+            },
+            "Aspose.Slides.NET": {
+              "target": "Package",
+              "version": "[23.1.0, )"
+            },
+            "Aspose.Words": {
+              "target": "Package",
+              "version": "[25.9.0, )"
+            },
+            "GhostScript.NetCore": {
+              "target": "Package",
+              "version": "[1.0.1, )"
+            },
+            "itext.html2pdf.core": {
+              "target": "Package",
+              "version": "[1.0.4, )"
+            },
+            "itext.io.core": {
+              "target": "Package",
+              "version": "[1.0.1, )"
+            },
+            "itext.kernel.core": {
+              "target": "Package",
+              "version": "[1.0.2, )"
+            },
+            "itext.layout.core": {
+              "target": "Package",
+              "version": "[1.0.1, )"
+            },
+            "itext7": {
+              "target": "Package",
+              "version": "[7.2.5, )"
+            },
+            "itext7.licensekey": {
+              "target": "Package",
+              "version": "[3.1.5, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.300\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\JenkinsHome\\workspace\\RSignCoreAPI\\RSign.Models\\RSign.Models.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\JenkinsHome\\workspace\\RSignCoreAPI\\RSign.Models\\RSign.Models.csproj",
+        "projectName": "RSign.Models",
+        "projectPath": "D:\\JenkinsHome\\workspace\\RSignCoreAPI\\RSign.Models\\RSign.Models.csproj",
+        "packagesPath": "C:\\Users\\vkaitha\\.nuget\\packages\\",
+        "outputPath": "D:\\JenkinsHome\\workspace\\RSignCoreAPI\\RSign.Models\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\vkaitha\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "targetAlias": "net6.0",
+            "projectReferences": {
+              "D:\\JenkinsHome\\workspace\\RSignCoreAPI\\RSign.Common\\RSign.Common.csproj": {
+                "projectPath": "D:\\JenkinsHome\\workspace\\RSignCoreAPI\\RSign.Common\\RSign.Common.csproj"
+              },
+              "D:\\JenkinsHome\\workspace\\RSignCoreAPI\\RSign.ManageDocument\\RSign.ManageDocument.csproj": {
+                "projectPath": "D:\\JenkinsHome\\workspace\\RSignCoreAPI\\RSign.ManageDocument\\RSign.ManageDocument.csproj"
+              },
+              "D:\\JenkinsHome\\workspace\\RSignCoreAPI\\RSign.Notification\\RSign.Notification.csproj": {
+                "projectPath": "D:\\JenkinsHome\\workspace\\RSignCoreAPI\\RSign.Notification\\RSign.Notification.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.300"
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "dependencies": {
+            "DotNetZip": {
+              "target": "Package",
+              "version": "[1.16.0, )"
+            },
+            "EntityFramework": {
+              "target": "Package",
+              "version": "[6.4.4, )"
+            },
+            "Microsoft.AspNet.Mvc": {
+              "target": "Package",
+              "version": "[5.2.9, )"
+            },
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[7.0.2, )"
+            },
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[7.0.2, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.2, )"
+            },
+            "StackExchange.Redis": {
+              "target": "Package",
+              "version": "[2.7.17, )"
+            },
+            "System.ServiceModel.Http": {
+              "target": "Package",
+              "version": "[4.10.3, )"
+            },
+            "System.ServiceModel.Primitives": {
+              "target": "Package",
+              "version": "[4.10.3, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.300\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\JenkinsHome\\workspace\\RSignCoreAPI\\RSign.Notification\\RSign.Notification.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\JenkinsHome\\workspace\\RSignCoreAPI\\RSign.Notification\\RSign.Notification.csproj",
+        "projectName": "RSign.Notification",
+        "projectPath": "D:\\JenkinsHome\\workspace\\RSignCoreAPI\\RSign.Notification\\RSign.Notification.csproj",
+        "packagesPath": "C:\\Users\\vkaitha\\.nuget\\packages\\",
+        "outputPath": "D:\\JenkinsHome\\workspace\\RSignCoreAPI\\RSign.Notification\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\vkaitha\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "targetAlias": "net6.0",
+            "projectReferences": {
+              "D:\\JenkinsHome\\workspace\\RSignCoreAPI\\RSign.Common\\RSign.Common.csproj": {
+                "projectPath": "D:\\JenkinsHome\\workspace\\RSignCoreAPI\\RSign.Common\\RSign.Common.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.300"
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.300\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\JenkinsHome\\workspace\\RSignCoreAPI\\RSign.SendAPI\\RSign.SendAPI.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\JenkinsHome\\workspace\\RSignCoreAPI\\RSign.SendAPI\\RSign.SendAPI.csproj",
+        "projectName": "RSign.SendAPI",
+        "projectPath": "D:\\JenkinsHome\\workspace\\RSignCoreAPI\\RSign.SendAPI\\RSign.SendAPI.csproj",
+        "packagesPath": "C:\\Users\\vkaitha\\.nuget\\packages\\",
+        "outputPath": "D:\\JenkinsHome\\workspace\\RSignCoreAPI\\RSign.SendAPI\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\vkaitha\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "targetAlias": "net6.0",
+            "projectReferences": {
+              "D:\\JenkinsHome\\workspace\\RSignCoreAPI\\RSign.Authentication\\RSign.Authentication.csproj": {
+                "projectPath": "D:\\JenkinsHome\\workspace\\RSignCoreAPI\\RSign.Authentication\\RSign.Authentication.csproj"
+              },
+              "D:\\JenkinsHome\\workspace\\RSignCoreAPI\\RSign.Common\\RSign.Common.csproj": {
+                "projectPath": "D:\\JenkinsHome\\workspace\\RSignCoreAPI\\RSign.Common\\RSign.Common.csproj"
+              },
+              "D:\\JenkinsHome\\workspace\\RSignCoreAPI\\RSign.ManageDocument\\RSign.ManageDocument.csproj": {
+                "projectPath": "D:\\JenkinsHome\\workspace\\RSignCoreAPI\\RSign.ManageDocument\\RSign.ManageDocument.csproj"
+              },
+              "D:\\JenkinsHome\\workspace\\RSignCoreAPI\\RSign.Models\\RSign.Models.csproj": {
+                "projectPath": "D:\\JenkinsHome\\workspace\\RSignCoreAPI\\RSign.Models\\RSign.Models.csproj"
+              },
+              "D:\\JenkinsHome\\workspace\\RSignCoreAPI\\RSign.Notification\\RSign.Notification.csproj": {
+                "projectPath": "D:\\JenkinsHome\\workspace\\RSignCoreAPI\\RSign.Notification\\RSign.Notification.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.300"
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "dependencies": {
+            "Microsoft.AspNet.WebApi.Core": {
+              "target": "Package",
+              "version": "[5.3.0, )"
+            },
+            "Microsoft.AspNetCore.Authentication.JwtBearer": {
+              "target": "Package",
+              "version": "[6.0.0, )"
+            },
+            "Microsoft.Extensions.Caching.StackExchangeRedis": {
+              "target": "Package",
+              "version": "[8.0.1, )"
+            },
+            "StackExchange.Redis": {
+              "target": "Package",
+              "version": "[2.7.17, )"
+            },
+            "Swashbuckle.AspNetCore": {
+              "target": "Package",
+              "version": "[6.2.3, )"
+            },
+            "System.ServiceModel.Http": {
+              "target": "Package",
+              "version": "[4.10.3, )"
+            },
+            "System.ServiceModel.Primitives": {
+              "target": "Package",
+              "version": "[4.10.3, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.300\\RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}
