@@ -3,7 +3,7 @@ stages:
   - security
   - deploy
 
-# ---------------- BUILD (LINUX - SERVER PATH) ----------------
+# ---------------- BUILD ----------------
 build_job:
   stage: build
   tags:
@@ -11,36 +11,31 @@ build_job:
   script:
     - set -x
 
-    - echo "Preparing clean workspace..."
-    - rm -rf /var/www/dotnetdeploy
-    - mkdir -p /var/www/dotnetdeploy
-
-    - cd /var/www
-
-    - echo "Cloning latest code from Git..."
-    - git clone https://github.com/kaithareddy03/dotnetdeploy.git
-
+    - echo "Using existing repo..."
     - cd /var/www/dotnetdeploy
+
+    - echo "Fetching latest changes..."
+    - git reset --hard
+    - git pull origin main
 
     - echo "Installing SonarScanner..."
     - dotnet tool install --global dotnet-sonarscanner || true
     - export PATH="$PATH:$HOME/.dotnet/tools"
 
-    - echo "Starting SonarQube analysis..."
+    - echo "Starting SonarQube..."
     - dotnet sonarscanner begin \
         /k:"rsign-api" \
         /d:sonar.host.url="http://rsignapp34.use.rpost.net:9047" \
         /d:sonar.login="$SONAR_TOKEN" \
         /d:sonar.qualitygate.wait=true
 
-    - echo "Building solution..."
+    - echo "Building..."
     - dotnet restore RSign.SendAPI.sln
     - dotnet build RSign.SendAPI.sln --configuration Release
 
-    - echo "Publishing build..."
+    - echo "Publishing..."
     - dotnet publish RSign.SendAPI.sln -c Release -o publish
 
-    - echo "Ending SonarQube..."
     - dotnet sonarscanner end \
         /d:sonar.login="$SONAR_TOKEN"
 
@@ -56,7 +51,6 @@ security_scan:
   needs:
     - build_job
   script:
-    - set -x
     - cd /var/www/dotnetdeploy
 
     - dotnet tool install --global dotnet-outdated-tool || true
@@ -91,16 +85,9 @@ deploy_job:
         Write-Output 'Cleaning deployment folder...'
         if (Test-Path $deployPath) {
             Remove-Item \"$deployPath\*\" -Recurse -Force
-        } else {
-            New-Item -ItemType Directory -Path $deployPath
         }
 
         Write-Output 'Deploying latest build...'
         Copy-Item \"$artifactPath\*\" -Destination $deployPath -Recurse -Force
 
-        Write-Output 'Recycling IIS App Pool...'
-        Import-Module WebAdministration
-        Restart-WebAppPool -Name 'RSignAPI'
-
-        Write-Output 'Deployment completed successfully!'
       "
