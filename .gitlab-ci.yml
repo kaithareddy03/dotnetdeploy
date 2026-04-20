@@ -3,88 +3,104 @@ stages:
   - security
   - deploy
 
-# ---------------- BUILD (LINUX) ----------------
+# ---------------- BUILD (LINUX - SERVER PATH) ----------------
 build_job:
   stage: build
   tags:
     - linux
   script:
-    - echo "Cloning repository..."
-    - git clone https://github.com/kaithareddy03/dotnetdeploy.git repo
-    - cd repo
+    - set -x
+
+    - echo "Preparing clean workspace..."
+    - rm -rf /var/www/dotnetdeploy
+    - mkdir -p /var/www/dotnetdeploy
+
+    - cd /var/www
+
+    - echo "Cloning latest code from Git..."
+    - git clone https://github.com/kaithareddy03/dotnetdeploy.git
+
+    - cd /var/www/dotnetdeploy
 
     - echo "Installing SonarScanner..."
-    - dotnet tool install --global dotnet-sonarscanner
+    - dotnet tool install --global dotnet-sonarscanner || true
     - export PATH="$PATH:$HOME/.dotnet/tools"
 
     - echo "Starting SonarQube analysis..."
     - dotnet sonarscanner begin \
         /k:"rsign-api" \
         /d:sonar.host.url="http://rsignapp34.use.rpost.net:9047" \
-        /d:sonar.login="$SONAR_TOKEN"
+        /d:sonar.login="$SONAR_TOKEN" \
+        /d:sonar.qualitygate.wait=true
 
-    - echo "Building project..."
-    - dotnet restore
-    - dotnet build --configuration Release
-    - dotnet publish -c Release -o publish
+    - echo "Building solution..."
+    - dotnet restore RSign.SendAPI.sln
+    - dotnet build RSign.SendAPI.sln --configuration Release
 
-    - echo "Ending SonarQube analysis..."
+    - echo "Publishing build..."
+    - dotnet publish RSign.SendAPI.sln -c Release -o publish
+
+    - echo "Ending SonarQube..."
     - dotnet sonarscanner end \
         /d:sonar.login="$SONAR_TOKEN"
 
   artifacts:
     paths:
-      - repo/publish
+      - /var/www/dotnetdeploy/publish
 
-# ---------------- SECURITY (LINUX) ----------------
+# ---------------- SECURITY ----------------
 security_scan:
   stage: security
   tags:
     - linux
+  needs:
+    - build_job
   script:
-    - cd repo
+    - set -x
+    - cd /var/www/dotnetdeploy
 
-    - echo "Installing vulnerability scanner..."
     - dotnet tool install --global dotnet-outdated-tool || true
     - export PATH="$PATH:$HOME/.dotnet/tools"
 
-    - echo "Running vulnerability scan..."
-    - dotnet outdated --severity Critical
+    - dotnet outdated RSign.SendAPI.sln --severity Critical
 
-    - |
-      if [ $? -ne 0 ]; then
-        echo "❌ Critical vulnerabilities found!"
-        exit 1
-      else
-        echo "✅ No critical vulnerabilities"
-      fi
-
-# ---------------- DEPLOY (WINDOWS) ----------------
+# ---------------- DEPLOY ----------------
 deploy_job:
   stage: deploy
   tags:
     - windows
-  dependencies:
+  needs:
     - build_job
+    - security_scan
   script:
     - powershell -Command "
         $ErrorActionPreference = 'Stop'
 
-        $artifactPath = '$env:CI_PROJECT_DIR\repo\publish'
+        $artifactPath = '\\RSignAPP34\var\www\dotnetdeploy\publish'
         $deployPath   = 'D:\RSignSendAPI'
         $backupRoot   = 'D:\backup'
 
         $timestamp = Get-Date -Format 'yyyyMMdd_HHmmss'
-        $backupPath = \"$backupRoot\RSignAPI_$timestamp\"
+        $backupPath = \"$backupRoot\RSignSendAPI_$timestamp\"
 
         Write-Output 'Taking backup...'
-        Copy-Item $deployPath $backupPath -Recurse -Force
+        if (Test-Path $deployPath) {
+            Copy-Item $deployPath $backupPath -Recurse -Force
+        }
 
-        Write-Output 'Deploying new build...'
+        Write-Output 'Cleaning deployment folder...'
+        if (Test-Path $deployPath) {
+            Remove-Item \"$deployPath\*\" -Recurse -Force
+        } else {
+            New-Item -ItemType Directory -Path $deployPath
+        }
+
+        Write-Output 'Deploying latest build...'
         Copy-Item \"$artifactPath\*\" -Destination $deployPath -Recurse -Force
 
-    
+        Write-Output 'Recycling IIS App Pool...'
+        Import-Module WebAdministration
+        Restart-WebAppPool -Name 'RSignAPI'
 
         Write-Output 'Deployment completed successfully!'
       "
-
