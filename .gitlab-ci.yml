@@ -46,18 +46,14 @@ security_scan:
 
         Write-Output "Running dependency vulnerability scan..."
 
-        # Install tool if not exists
         if (-not (dotnet tool list -g | Select-String "dotnet-outdated-tool")) {
             dotnet tool install --global dotnet-outdated-tool
         }
 
-        # Fix PATH
         $env:PATH += ";$env:USERPROFILE\.dotnet\tools"
 
-        # Run scan
         dotnet outdated --severity Critical
 
-        # 🔥 Fail pipeline if vulnerabilities found
         if ($LASTEXITCODE -ne 0) {
             Write-Error "Critical vulnerabilities detected!"
             exit 1
@@ -72,13 +68,14 @@ deploy_job:
     - powershell |
         $ErrorActionPreference = "Stop"
 
-        $deployPath = "C:\Projects\RSignSendAPI"
-        $backupPath = "C:\jenkins\backup\RSignSendAPI_$(Get-Date -Format 'yyyyMMdd_HHmmss')"
         $publishPath = "D:\dotnetdeploy\publish"
+        $deployPath  = "D:\inetpub\wwwroot\RSignAPI"
+        $backupRoot  = "D:\backup"
 
-        Write-Output "Stopping IIS..."
-        Stop-WebAppPool -Name "SendAPI"
-        Stop-Website -Name "SendAPI"
+        $timestamp = Get-Date -Format "yyyyMMdd_HHmmss"
+        $backupPath = "$backupRoot\RSignAPI_$timestamp"
+
+    
 
         Write-Output "Taking backup..."
         Copy-Item $deployPath $backupPath -Recurse -Force
@@ -86,8 +83,6 @@ deploy_job:
         Write-Output "Deploying new build..."
         Copy-Item "$publishPath\*" -Destination $deployPath -Recurse -Force
 
-        Write-Output "Starting IIS..."
-        Start-WebAppPool -Name "SendAPI"
-        Start-Website -Name "SendAPI"
+      
 
         Write-Output "Deployment completed successfully!"
