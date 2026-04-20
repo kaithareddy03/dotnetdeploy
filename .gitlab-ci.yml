@@ -1,44 +1,12 @@
+stages:
+  - build
+
 build_job:
   stage: build
   tags:
     - linux
   script:
-    - set -x
-<<<<<<< HEAD
-    - echo "STARTED BUILD"
-
-    - cd /var/www/dotnetdeploy
-
-    - git reset --hard
-    - git clean -fd
-    - git pull origin main
-
-    - dotnet tool install --global dotnet-sonarscanner || true
-    - export PATH="$PATH:$HOME/.dotnet/tools"
-
-    - dotnet sonarscanner begin /k:"rsign-api" /d:sonar.host.url="http://rsignapp34.use.rpost.net:9047" /d:sonar.login="$SONAR_TOKEN"
-
-    - dotnet restore RSign.SendAPI.sln
-    - dotnet build RSign.SendAPI.sln --configuration Release
-    - dotnet publish RSign.SendAPI.sln -c Release -o publish
-
-    - dotnet sonarscanner end /d:sonar.login="$SONAR_TOKEN"
-  stage: build
-  tags:
-    - linux
-  script:
-    - set -x
-    - echo "Using existing repo..."
-=======
-    - echo "START BUILD"
-
->>>>>>> a94e556 (debug11)
-    - cd /var/www/dotnetdeploy
-
-    - git reset --hard
-    - git clean -fd
-    - git pull origin main
-
-    - dotnet restore RSign.SendAPI.csproj
-    - dotnet build RSign.SendAPI.csproj --configuration Release
-    - dotnet publish RSign.SendAPI.csproj -c Release -o publish
+    - echo "STARTED"
+    - pwd
+    - whoami
+    - ls -la
