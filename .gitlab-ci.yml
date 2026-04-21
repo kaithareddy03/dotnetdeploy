@@ -10,15 +10,14 @@ build_job:
     - set -xe
     - echo "START BUILD"
 
-    - echo "Current directory"
     - pwd
     - ls -la
 
     - echo "Restore"
-    - dotnet restore RSign.SendAPI.sln
+    - dotnet restore RSign.SendAPI/RSign.SendAPI.sln
 
     - echo "Build"
-    - dotnet build RSign.SendAPI.sln --configuration Release
+    - dotnet build RSign.SendAPI/RSign.SendAPI.sln --configuration Release
 
 package_job:
   stage: package
