@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Aspose.Cells" Version="23.1.1" />
+    <PackageReference Include="Aspose.PDF" Version="23.1.0" />
+    <PackageReference Include="Aspose.Slides.NET" Version="23.1.0" />
+    <PackageReference Include="Aspose.Words" Version="23.1.0" />
+    <PackageReference Include="itext.html2pdf.core" Version="1.0.4" />
+    <PackageReference Include="itext.io.core" Version="1.0.1" />
+    <PackageReference Include="itext.kernel.core" Version="1.0.2" />
+    <PackageReference Include="itext.layout.core" Version="1.0.1" />
+    <PackageReference Include="itext7" Version="7.2.5" />
+    <PackageReference Include="itext7.licensekey" Version="3.1.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\RSign.Common\RSign.Common.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="itext.io">
+      <HintPath>..\..\CommonFiles\ThirdPartyDlls\itext.io.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

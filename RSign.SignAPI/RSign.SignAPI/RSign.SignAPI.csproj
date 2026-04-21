@@ -1,0 +1,40 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <NoWarn>1701;1702;CA1416;CS8602;CS8604;CS0168;CS8618;CS8601;CS8600;CS8603;CS8629;CS8625;CS8073</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <NoWarn>1701;1702;CA1416;CS8602;CS8604;CS0168;CS8618;CS8601;CS8600;CS8603;CS8629;CS8625;CS8073</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="dotenv.net" Version="3.1.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\RSign.Common\RSign.Common.csproj" />
+    <ProjectReference Include="..\..\RSign.ManageDocument\RSign.ManageDocument.csproj" />
+    <ProjectReference Include="..\..\RSign.Models\RSign.Models.csproj" />
+    <ProjectReference Include="..\..\RSign.Notification\RSign.Notification.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="GoogleDriveDownload">
+      <HintPath>..\..\CommonFiles\ThirdPartyDlls\GoogleDriveDownload.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
+  </ItemGroup>
+
+</Project>

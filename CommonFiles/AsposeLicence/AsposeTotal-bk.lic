@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<License>
+  <Data>
+    <LicensedTo>RPost</LicensedTo>
+    <LicenseType>Developer OEM</LicenseType>
+    <LicenseNote>Limited to 1 developer.</LicenseNote>
+    <OrderID>130104035236</OrderID>
+    <OEM>This is a redistributable license</OEM>
+    <Products>
+      <Product>Aspose.Total</Product>
+    </Products>
+    <EditionType>Enterprise</EditionType>
+    <SerialNumber>528b55d4-ee90-4066-a13e-cc24e361c369</SerialNumber>
+    <SubscriptionExpiry>20140104</SubscriptionExpiry>
+    <LicenseVersion>2.2</LicenseVersion>
+  </Data>
+  <Signature>rsUeLBixE3GvIrmtYcUamfdkfLvAUqdmVlRUAOfhL+/U3msY7J/jdb+sbsa01bzur7bHiZGmzVebIrJPY4JRg3/R+SiwjphCthNdU15GdmxDzHCGhG/So9LCOB0trV/Q3sRnDy8Ij3/EtyjZITKpwlCMrMHAzqVD1pOZxR1leDk=</Signature>
+</License>

@@ -1,0 +1,34 @@
+﻿namespace RSign.Common.Enums
+{
+    public enum Lookup
+    {
+        DateFormat,
+        ExpiryType,
+        RecipientType,
+        EnvelopeStatus,
+        SignerStatus,
+        Controls,
+        Templates,
+        Fonts,
+        MaxCharacters,
+        TextType,
+        ReminderDropdownOptions,
+        ShowSettingsAccessibility,
+        TimeZone,
+        CheckboxConditions,
+        InitialConditions,
+        TextConditions,
+        AccessAuthenticationSettingType,
+        LanguageKeyDetails,
+        MasterLanguageKeyDetails,
+        UserType,
+        AttachSignedPdf,
+        SettingsDisplayOptions,
+        DatetoSignedDocNameSettingsOptions,
+        DocumentPaperSize,
+        DropdownOptions,
+        HeaderFooterSettings,
+        DialingCountryCodes,
+        UserRoles
+    }
+}

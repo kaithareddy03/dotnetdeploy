@@ -1,0 +1,95 @@
+﻿using RSign.Common.Helpers;
+using RSign.ManageDocument.Models;
+using RSign.Models.APIModels;
+using RSign.Models.APIModels.Envelope;
+using RSign.Models.EmailQueueProcessor;
+using System;
+using System.Collections.Generic;
+using System.Drawing.Text;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Xml.Linq;
+using static RSign.Common.Helpers.Constants;
+using ChilkatHelper = RSign.Common.Mailer.ChilkatHelper;
+
+namespace RSign.Models.Interfaces
+{
+    public interface IEnvelopeHelperMain
+    {
+        EnvelopeInfo GetDocumentControls(Envelope envelopeObject, EnvelopeInfo controlsInfo, Guid recipientId, Guid envelopeId, string currentRecipientEmailId = "", string currentenvelopeID = "", List<ConditionalControlMapping> conditionalControlMappings = null, bool checkConditionProp = true);
+        EnvelopeInfo GetEnvelopeImageInfo(Envelope envelopeObject, string dirPath);
+        EnvelopeInfo GetEnvelopeImageInfoByRecipientGroup(Envelope envelopeObject, Guid recipientId, Guid value, string dirPath);
+        string GetLanguageBasedApiMessge(Guid userID, string keyName);
+        string GetLanguageCodeBasedApiMessge(string LanguageCode, string keyName);
+        List<string> GetSignerDocFromDirectory(Guid envelopeId, Guid recipientId, string envelopeDirectoryUNCPath);
+       // AdminGeneralAndSystemSettings TransformSettingsDictionaryToEntity(APISettings aPISettings);
+        string ConvertSignImageWithStamp(string base64string, out int intHeight, out int intWidth, string envelopeCodeStamp = "", int electronicSignIndicationId = 1, string dateFormat = "", string timeZoneSetting = "", 
+            string dateFormatID = "E3DAD8D9-E16F-40F5-B112-BBA204538136", string tempSignatureTypeID = "00000000-0000-0000-0000-000000000000");
+        string GetImagePath(int id, Guid envelopeID, string uncPath);
+        string GetSubEnvelopeImagePathForPrefill(int id, Guid envelopeID, string imageName, string uncPath);
+        string GetSubEnvelopeImagePathForPrefillNew(int id, Guid envelopeID, string imageName);
+        string ConvertSignImage(PrivateFontCollection pfc, string text, string font, string fontsize, string fontColor, string height, string width, out int intHeight, out int intWidth, string envelopeCodeStamp = "", int electronicSignIndicationId = 1, string dateFormat = "", string userTimezone = "", string dateFormatID = "");
+        string AppendDateTime(int dtFormatId, string fileName, string ModifiedDatetime);
+        string GetFilesReviewZip(List<string> files, string locationPath, string Subject);
+        FileStream DownloadPDFOnSignDocument(Envelope envelope, string temporaryLocation, Guid recipientId);
+        AdminGeneralAndSystemSettings GetAllSettingsDetails(Guid userID, string userEmail);
+        string EmailBannerSettings(string mailTemlate, AdminGeneralAndSystemSettings allSettingsDetails, string MailTemplateType);
+        string GetEmailSubjectPrefix(string langaugeCode, string Subject, string MailType);
+        string GetEmailSubject(string langaugeCode, string Subject, string MailType);
+        void EmailQueueFunction(EmailQueueProcessor.EmailQueueData emailQueueData, Boolean ForcefullyEmailqueueentry = false, EmailQueueProcessor.EmailQueueAttachmentData emailQueueAttachmentData = null);
+        string ConvertHandDrawnSignImage(string base64string, out int intHeight, out int intWidth, string envelopeCodeStamp = "", int electronicSignIndicationId = 1, string dateFormat = "", string userTimezone = "", string dateFormatID = "");
+        string ConvertHandDrawnSignImageUpload(string base64string, out int intHeight, out int intWidth, string envelopeCodeStamp = "", int electronicSignIndicationId = 1, string dateFormat = "", string userTimezone = "", string dateFormatID = "");
+        bool SaveControlsDetailForFinishLater(Envelope envelope, List<DocumentContents> userControls, Recipients recipient, bool isBack);
+        void SaveControl(List<DocumentContents> documentContentDetail, Guid recipientId, Recipients recipientDetail, XDocument doc, List<DocumentContents> documentContents, bool isSignProcess, string certificateSignature = "", int electronicStampRequired = 1, string timeStampControlValue = "");
+        string TakeUniqueDisplayCodeForRecipient();
+        void DelegateToMail(string delegatedPersonName, string delegatedPersonEmail, Envelope envelope, Recipients recipientDetails, Guid delegatedRecipientId, string envelopeSenderEmail, string envelopeSenderName, string ipAddress, string contextVal, string authKey, string recipientCode, Recipients delegatedRecipientDetails);
+        void DelegatedSenderMail(string delegatedPearsonName, string delegatedPersonEmail, Envelope envelope, Recipients recipientDetail, Guid delegatedRecipientId, Recipients senderDetails, string senderEmailAddress, string ipAddress, string contextVal, string authKey, Recipients delegatedRecipientDetails);
+        void DeleteContractFileInCaseOfError(Guid envelopeID, string dirpath);
+        void RejectToMail(string comment, string subject, string finalPdfFilePath, Envelope envelope, Recipients signerDetails, Recipients senderDetails, string contextVal, string envelopeDirectoryPath);
+        void RejectMailToSender(string comment, string subject, string finalPdfFilePath, Envelope envelope, Recipients signerDetails, Recipients senderDetails, string contextVal, string envelopeDirectoryPath);
+        string getSigningURL(string senderEmailAddress, string templateKey, string envelopeID, string recID, string recEmail, string copyEmail = "", bool IsSignerIdentity = false);
+        string EncryptQueryString(string strQueryString);
+        bool AllowSendConfirmationEmailForStaticTemplate(Envelope envelopeObject, Guid EnvelopeID, UserProfile senderDetails, string recepientID, bool isTosign, List<DocumentContents> documentContentDetail, string certificateSignature = "", bool isResent = false);
+        bool SignDocument(Envelope envelopeObject, List<DocumentContents> documentContentDetail, Envelope apiEnvelope, Guid apiRecipientId, string strUserSettings, out string errorIfFound, string certificateSignature = "", string copyEmail = "");
+        EnvelopeInfo GetSignerLandingStaticTemplateInfo(Guid templateID, Template envelope);
+        EnvelopeInfo GetStaticDocumentControls(EnvelopeInfo controlsInfo, Guid templateID);
+        void EmailQueueTemplateFunction(EmailQueueProcessor.EmailQueueData emailQueueData, Boolean ForcefullyEmailqueueentry = false, EmailQueueProcessor.EmailQueueAttachmentData emailQueueAttachmentData = null);
+        EnvelopeInfo GetStaticDocumentControlsBYRoleId(EnvelopeInfo controlsInfo, Guid templateID, Guid currentRecipientID, string recipientEmailId = "");
+        EnvelopeInfo GetAllDocumentControls(Envelope envelope, EnvelopeInfo controlsInfo, Guid recipientId, Guid envelopeId, string recipientEmailId = "", string envelopeCode = "", bool CanEdit = false);
+        WatermarkStamp GetWatermarkStamp(Guid userId);
+        string GetDateTimeStampControlValue(Guid dateFormatID, string userTimezone);
+        bool PrepareEnvelopeDocumentsFromStaticTemplate(Guid templateID, Guid envelopeID, string envelopeFolderUNCPath, string templateFolderUNCPath, bool IsRuleConsumed = false);
+        void SetApiCallFlag();
+        EnvelopeContent CreateXml(Envelope sessionEnvelope);
+        List<DocumentContents> GetDocumentContents(List<DocumentContentDetails> documentContentDetails);
+        bool InviteSignStaticDocument(List<DocumentContents> documentContentDetail, Envelope apiEnvelope, Guid apiRecipientId, string strUserSettings, out string errorIfFound);
+        bool InviteSenderConfirmationEmailForStaticTemplate(Guid EnvelopeID, UserProfile senderDetails, string recepientID, bool isTosign, List<DocumentContents> documentContentDetail, bool isResent = false, List<SendConfirmationDataModel> sendConfirmationData = null, string RecipientDeliveryMode = "");
+        bool SignStaticDocument(List<DocumentContents> documentContentDetail, Envelope apiEnvelope, Guid apiRecipientId, string strUserSettings, string envelopeDirectoryPath, out string errorIfFound);
+        bool SendConfirmationEmailForStaticTemplate(Guid EnvelopeID, UserProfile senderDetails, string recepientID, bool isTosign, List<DocumentContents> documentContentDetail, bool isResent = false, List<SendConfirmationDataModel> sendConfirmationData = null, int? DeliveryMode = 1);
+        bool CheckAndCompleteGroupEnvelope(Envelope envelope, Guid recipientId);
+        bool IsGenerateNewSigningUrl(string emailId);
+        string GetEnvelopeImagePath(int id, Guid envelopeID, string envelopeFolderUNCPath);
+        string GetImagePathNew(int id, Guid envelopeID);        
+        string GetImagTemplatePath(int id, Guid envelopeID, string templateFolderUNCPath);
+        string GetImagTemplate(int id, Guid envelopeID);
+        int IsBotClick(string ipAddress, string userAgent);
+        List<DialingCountryCodes> LoadDialingCountryCodes();
+        void SaveShortUrlForSMS(Envelope sessionEnvelope, string strURLWithData, string signingShortURL, string shortUriCode, bool isEnvelopeCompleted);
+        bool SendMobileSMS(Envelope sessionEnvelope, string mobileTemplatepassword, string signerMobileNumber, Template template = null);
+        void SendSMSThroughEmailService(Envelope sessionEnvelope, string mobileTemplatepassword, int signReqReplyToAddressValue, string emailTypeVal, Recipients signer, string emailSubject);
+        void SendTemplateSMSTThroughEmailService(Template template, string mobileTemplatepassword, int signReqReplyToAddressValue, string emailTypeVal, string signerMobile, string emailSubject, UserProfile userprofile);
+        bool SendMobileSMSThroughSMSService(List<SendMobileSMSModel> sendMobileSMSModelData);
+        bool SendMobileSMSThroughEmailServiceSMSService(List<SendMobileSMSModel> sendMobileSMSModelData);
+        string CreateVerificationCodeMailTemplate(Envelope envelope, string imageLogoURl, string fromEmailId, string userName, Recipients signer, string firstName, string mailTemplate, string signerEmail = "", string SigneruserName = "", string VerificationCode = "");
+        bool SendFinishLaterReminderEmail(Envelope envelope, string urlForFinishLater, Recipients recipint, Recipients sender);
+        Guid GetEnvelopeStatus(Guid newEnvelopeID);
+        List<ControlsData> GetAllDocumentControlsRetriveControlData(Guid envelopeID, Envelope envelope);
+        void GetMobileDeiliveryModeOptions(Recipients signer, ref bool isEmailSend, ref bool isMobileSend);
+        void GetEmailDeiliveryModeOptions(Recipients signer, ref bool isEmailSend, ref bool isMobileSend);
+        bool GetIsPasswordMailToSigner(bool? enableMessageToMobile, Envelope envelope);
+        string AppendSignerDeliveryModeDetails(Recipients signerRecipient, string mailTemlate, string replaceTag, int isCopyAddress = 0);
+        string AppendCCUserEmailsList(List<Recipients> recipients, bool? enableMessageToMobile = false);
+        string UpdateFinalSignedDocumentNamingForMultipleDocuments(Envelope envelopeObject, Guid companyId);
+    }
+}

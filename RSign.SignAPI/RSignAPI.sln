@@ -1,0 +1,49 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33213.308
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RSign.SignAPI", "RSign.SignAPI\RSign.SignAPI.csproj", "{49853E74-F641-40EA-A5E1-51482E9C14C5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RSign.Common", "..\RSign.Common\RSign.Common.csproj", "{A8AF846A-0223-428C-9EAE-A7BB854884E5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RSign.ManageDocument", "..\RSign.ManageDocument\RSign.ManageDocument.csproj", "{19CCC487-9E9E-41A1-BB78-C09225A5AE2A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RSign.Models", "..\RSign.Models\RSign.Models.csproj", "{0C88ECB8-26BD-4B15-8B7E-A88A608E433B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RSign.Notification", "..\RSign.Notification\RSign.Notification.csproj", "{638755EC-6376-4367-B685-168647495687}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{49853E74-F641-40EA-A5E1-51482E9C14C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{49853E74-F641-40EA-A5E1-51482E9C14C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{49853E74-F641-40EA-A5E1-51482E9C14C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{49853E74-F641-40EA-A5E1-51482E9C14C5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A8AF846A-0223-428C-9EAE-A7BB854884E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A8AF846A-0223-428C-9EAE-A7BB854884E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A8AF846A-0223-428C-9EAE-A7BB854884E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A8AF846A-0223-428C-9EAE-A7BB854884E5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{19CCC487-9E9E-41A1-BB78-C09225A5AE2A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{19CCC487-9E9E-41A1-BB78-C09225A5AE2A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{19CCC487-9E9E-41A1-BB78-C09225A5AE2A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{19CCC487-9E9E-41A1-BB78-C09225A5AE2A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0C88ECB8-26BD-4B15-8B7E-A88A608E433B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0C88ECB8-26BD-4B15-8B7E-A88A608E433B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0C88ECB8-26BD-4B15-8B7E-A88A608E433B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0C88ECB8-26BD-4B15-8B7E-A88A608E433B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{638755EC-6376-4367-B685-168647495687}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{638755EC-6376-4367-B685-168647495687}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{638755EC-6376-4367-B685-168647495687}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{638755EC-6376-4367-B685-168647495687}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8995B549-A141-46F8-A7DF-7189B5B64DC4}
+	EndGlobalSection
+EndGlobal
