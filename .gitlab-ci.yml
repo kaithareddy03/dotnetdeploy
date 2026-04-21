@@ -1,119 +1,29 @@
 stages:
   - build
-  - quality
-  - security
   - package
-  - deploy
 
-variables:
-  PROJECT_PATH: "/var/www/dotnetdeploy"
-
-# ---------------- BUILD ----------------
 build_job:
   stage: build
   tags:
     - linux
   script:
     - set -xe
-    - echo "===== BUILD START ====="
+    - cd /var/www/dotnetdeploy
 
-    - echo "Go to project path"
-    - cd $PROJECT_PATH
-
-    - echo "Fix permissions"
-    - sudo chown -R gitlab-runner:gitlab-runner $PROJECT_PATH || true
-
-    - echo "Get latest code"
     - git reset --hard
     - git clean -fd
     - git pull origin main
 
-    - echo "Check files"
-    - ls -la
-
-    - echo "Restore & Build"
     - dotnet restore RSign.SendAPI.csproj
     - dotnet build RSign.SendAPI.csproj --configuration Release
 
-# ---------------- SONARQUBE ----------------
-sonarqube_scan:
-  stage: quality
-  tags:
-    - linux
-  script:
-    - set -xe
-    - echo "===== SONAR START ====="
-
-    - cd $PROJECT_PATH
-
-    - dotnet tool install --global dotnet-sonarscanner || true
-    - export PATH="$PATH:$HOME/.dotnet/tools"
-
-    - dotnet sonarscanner begin \
-        /k:"rsign-api" \
-        /d:sonar.host.url="http://rsignapp34.use.rpost.net:9047" \
-        /d:sonar.login="$SONAR_TOKEN"
-
-    - dotnet build RSign.SendAPI.csproj --configuration Release
-
-    - dotnet sonarscanner end \
-        /d:sonar.login="$SONAR_TOKEN"
-
-# ---------------- OWASP ----------------
-owasp_scan:
-  stage: security
-  tags:
-    - linux
-  script:
-    - set -xe
-    - echo "===== OWASP SCAN ====="
-
-    - dotnet tool install --global dotnet-outdated-tool || true
-    - export PATH="$PATH:$HOME/.dotnet/tools"
-
-    - dotnet outdated --severity Critical || true
-
-# ---------------- PACKAGE ----------------
 package_job:
   stage: package
   tags:
     - linux
   script:
-    - set -xe
-    - echo "===== PACKAGE ====="
-
-    - cd $PROJECT_PATH
-
+    - cd /var/www/dotnetdeploy
     - dotnet publish RSign.SendAPI.csproj -c Release -o publish
-
-    - ls -la publish
   artifacts:
     paths:
       - publish
-
-# ---------------- DEPLOY ----------------
-deploy_job:
-  stage: deploy
-  tags:
-    - windows
-  dependencies:
-    - package_job
-  script:
-    - powershell -Command "
-        \$ErrorActionPreference = 'Stop'
-
-        \$source = \"\$env:CI_PROJECT_DIR\\publish\"
-        \$dest   = 'D:\\RSignSendAPI'
-        \$backup = 'D:\\backup\\RSignSendAPI'
-
-        \$timestamp = Get-Date -Format 'yyyyMMdd_HHmmss'
-        \$backupPath = \"\$backup\_\$timestamp\"
-
-        Write-Output 'Taking backup...'
-        Copy-Item \$dest \$backupPath -Recurse -Force
-
-        Write-Output 'Deploying files...'
-        Copy-Item \"\$source\\*\" -Destination \$dest -Recurse -Force
-
-        Write-Output 'Deployment completed successfully'
-      "
