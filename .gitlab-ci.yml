@@ -1,24 +1,81 @@
 stages:
   - build
+  - quality
+  - security
+  - package
+  - deploy
 
+# ---------------- BUILD ----------------
 build_job:
   stage: build
   tags:
     - linux
   script:
-    - set -x
-    - echo "START BUILD"
-
+    - echo "Getting latest code"
     - cd /var/www/dotnetdeploy
-
-    - echo "Updating latest code..."
     - git reset --hard
-    - git clean -fd
     - git pull origin main
 
-    - echo "Building project..."
+    - echo "Building project"
     - dotnet restore RSign.SendAPI.csproj
     - dotnet build RSign.SendAPI.csproj --configuration Release
 
-    - echo "Publishing..."
+# ---------------- SONARQUBE ----------------
+sonarqube_scan:
+  stage: quality
+  tags:
+    - linux
+  script:
+    - dotnet tool install --global dotnet-sonarscanner || true
+    - export PATH="$PATH:$HOME/.dotnet/tools"
+
+    - dotnet sonarscanner begin \
+        /k:"rsign-api" \
+        /d:sonar.host.url="http://rsignapp34.use.rpost.net:9047" \
+        /d:sonar.login="$SONAR_TOKEN"
+
+    - dotnet build RSign.SendAPI.csproj
+
+    - dotnet sonarscanner end \
+        /d:sonar.login="$SONAR_TOKEN"
+
+# ---------------- OWASP SCAN ----------------
+owasp_scan:
+  stage: security
+  tags:
+    - linux
+  script:
+    - echo "Running OWASP Dependency Check"
+    - dotnet tool install --global dotnet-outdated-tool || true
+    - export PATH="$PATH:$HOME/.dotnet/tools"
+    - dotnet outdated --severity Critical
+
+# ---------------- PACKAGE ----------------
+package_job:
+  stage: package
+  tags:
+    - linux
+  script:
+    - echo "Publishing project"
     - dotnet publish RSign.SendAPI.csproj -c Release -o publish
+  artifacts:
+    paths:
+      - publish
+
+# ---------------- DEPLOY ----------------
+deploy_job:
+  stage: deploy
+  tags:
+    - windows
+  dependencies:
+    - package_job
+  script:
+    - powershell -Command "
+        $source = '$env:CI_PROJECT_DIR\publish'
+        $dest   = 'D:\RSignSendAPI'
+
+        Write-Output 'Copying files...'
+        Copy-Item \"$source\*\" -Destination $dest -Recurse -Force
+
+        Write-Output 'Deployment completed'
+      "
