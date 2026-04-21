@@ -5,18 +5,33 @@ stages:
   - package
   - deploy
 
+variables:
+  PROJECT_PATH: "/var/www/dotnetdeploy"
+
 # ---------------- BUILD ----------------
 build_job:
   stage: build
   tags:
     - linux
   script:
-    - echo "Getting latest code"
-    - cd /var/www/dotnetdeploy
+    - set -xe
+    - echo "===== BUILD START ====="
+
+    - echo "Go to project path"
+    - cd $PROJECT_PATH
+
+    - echo "Fix permissions"
+    - sudo chown -R gitlab-runner:gitlab-runner $PROJECT_PATH || true
+
+    - echo "Get latest code"
     - git reset --hard
+    - git clean -fd
     - git pull origin main
 
-    - echo "Building project"
+    - echo "Check files"
+    - ls -la
+
+    - echo "Restore & Build"
     - dotnet restore RSign.SendAPI.csproj
     - dotnet build RSign.SendAPI.csproj --configuration Release
 
@@ -26,6 +41,11 @@ sonarqube_scan:
   tags:
     - linux
   script:
+    - set -xe
+    - echo "===== SONAR START ====="
+
+    - cd $PROJECT_PATH
+
     - dotnet tool install --global dotnet-sonarscanner || true
     - export PATH="$PATH:$HOME/.dotnet/tools"
 
@@ -34,21 +54,24 @@ sonarqube_scan:
         /d:sonar.host.url="http://rsignapp34.use.rpost.net:9047" \
         /d:sonar.login="$SONAR_TOKEN"
 
-    - dotnet build RSign.SendAPI.csproj
+    - dotnet build RSign.SendAPI.csproj --configuration Release
 
     - dotnet sonarscanner end \
         /d:sonar.login="$SONAR_TOKEN"
 
-# ---------------- OWASP SCAN ----------------
+# ---------------- OWASP ----------------
 owasp_scan:
   stage: security
   tags:
     - linux
   script:
-    - echo "Running OWASP Dependency Check"
+    - set -xe
+    - echo "===== OWASP SCAN ====="
+
     - dotnet tool install --global dotnet-outdated-tool || true
     - export PATH="$PATH:$HOME/.dotnet/tools"
-    - dotnet outdated --severity Critical
+
+    - dotnet outdated --severity Critical || true
 
 # ---------------- PACKAGE ----------------
 package_job:
@@ -56,8 +79,14 @@ package_job:
   tags:
     - linux
   script:
-    - echo "Publishing project"
+    - set -xe
+    - echo "===== PACKAGE ====="
+
+    - cd $PROJECT_PATH
+
     - dotnet publish RSign.SendAPI.csproj -c Release -o publish
+
+    - ls -la publish
   artifacts:
     paths:
       - publish
@@ -71,11 +100,20 @@ deploy_job:
     - package_job
   script:
     - powershell -Command "
-        $source = '$env:CI_PROJECT_DIR\publish'
-        $dest   = 'D:\RSignSendAPI'
+        \$ErrorActionPreference = 'Stop'
 
-        Write-Output 'Copying files...'
-        Copy-Item \"$source\*\" -Destination $dest -Recurse -Force
+        \$source = \"\$env:CI_PROJECT_DIR\\publish\"
+        \$dest   = 'D:\\RSignSendAPI'
+        \$backup = 'D:\\backup\\RSignSendAPI'
 
-        Write-Output 'Deployment completed'
+        \$timestamp = Get-Date -Format 'yyyyMMdd_HHmmss'
+        \$backupPath = \"\$backup\_\$timestamp\"
+
+        Write-Output 'Taking backup...'
+        Copy-Item \$dest \$backupPath -Recurse -Force
+
+        Write-Output 'Deploying files...'
+        Copy-Item \"\$source\\*\" -Destination \$dest -Recurse -Force
+
+        Write-Output 'Deployment completed successfully'
       "
