@@ -8,7 +8,7 @@ build_job:
     - linux
   script:
     - set -xe
-    - cd /var/www/dotnetdeploy
+    - cd /var/www/dotnetdeploy/RSign.SendAPI/
 
     - git reset --hard
     - git clean -fd
