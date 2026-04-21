@@ -8,22 +8,29 @@ build_job:
     - linux
   script:
     - set -xe
-    - cd /var/www/dotnetdeploy/RSign.SendAPI/
+    - echo "START BUILD"
 
-    - git reset --hard
-    - git clean -fd
-    - git pull origin main
+    - echo "Current directory"
+    - pwd
+    - ls -la
 
-    - dotnet restore RSign.SendAPI.csproj
-    - dotnet build RSign.SendAPI.csproj --configuration Release
+    - echo "Restore"
+    - dotnet restore RSign.SendAPI.sln
+
+    - echo "Build"
+    - dotnet build RSign.SendAPI.sln --configuration Release
 
 package_job:
   stage: package
   tags:
     - linux
   script:
-    - cd /var/www/dotnetdeploy
-    - dotnet publish RSign.SendAPI.csproj -c Release -o publish
+    - set -xe
+    - echo "Publishing"
+
+    - dotnet publish RSign.SendAPI/RSign.SendAPI.csproj -c Release -o publish
+
+    - ls -la publish
   artifacts:
     paths:
       - publish
