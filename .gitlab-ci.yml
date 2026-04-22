@@ -6,7 +6,8 @@ stages:
   - deploy
 
 variables:
-  PROJECT_PATH: "RSign.SendAPI/RSign.SendAPI.csproj"
+  PROJECT_SOLUTION: "RSign.SendAPI/RSign.SendAPI.sln"
+  PROJECT_CSPROJ: "RSign.SendAPI/RSign.SendAPI.csproj"
 
 # ---------------- BUILD ----------------
 build_job:
@@ -15,16 +16,16 @@ build_job:
     - linux
   script:
     - set -xe
-    - echo "START BUILD"
+    - echo "===== BUILD START ====="
 
     - pwd
     - ls -la
 
     - echo "Restore"
-    - dotnet restore RSign.SendAPI/RSign.SendAPI.sln
+    - dotnet restore $PROJECT_SOLUTION
 
     - echo "Build"
-    - dotnet build RSign.SendAPI/RSign.SendAPI.sln --configuration Release
+    - dotnet build $PROJECT_SOLUTION --configuration Release
 
 # ---------------- SONARQUBE ----------------
 sonarqube_scan:
@@ -33,7 +34,7 @@ sonarqube_scan:
     - linux
   script:
     - set -xe
-    - echo "SONAR SCAN"
+    - echo "===== SONAR SCAN ====="
 
     - dotnet tool install --global dotnet-sonarscanner || true
     - export PATH="$PATH:$HOME/.dotnet/tools"
@@ -43,7 +44,7 @@ sonarqube_scan:
         /d:sonar.host.url="http://rsignapp34.use.rpost.net:9047" \
         /d:sonar.login="$SONAR_TOKEN"
 
-    - dotnet build RSign.SendAPI/RSign.SendAPI.sln
+    - dotnet build $PROJECT_SOLUTION --configuration Release
 
     - dotnet sonarscanner end \
         /d:sonar.login="$SONAR_TOKEN"
@@ -55,7 +56,7 @@ owasp_scan:
     - linux
   script:
     - set -xe
-    - echo "OWASP SCAN"
+    - echo "===== OWASP SCAN ====="
 
     - dotnet tool install --global dotnet-outdated-tool || true
     - export PATH="$PATH:$HOME/.dotnet/tools"
@@ -69,9 +70,9 @@ package_job:
     - linux
   script:
     - set -xe
-    - echo "Publishing"
+    - echo "===== PACKAGE ====="
 
-    - dotnet publish RSign.SendAPI/RSign.SendAPI.csproj -c Release -o publish
+    - dotnet publish $PROJECT_CSPROJ -c Release -o publish
 
     - ls -la publish
   artifacts:
@@ -87,24 +88,20 @@ deploy_job:
     - package_job
   script:
     - powershell -Command "
-        $ErrorActionPreference = 'Stop'
+        \$ErrorActionPreference = 'Stop'
 
-        $source = '$env:CI_PROJECT_DIR\publish'
-        $dest   = 'D:\RSignSendAPI'
-        $backup = 'D:\backup\RSignSendAPI'
+        \$source = \"\$env:CI_PROJECT_DIR\\publish\"
+        \$dest   = 'D:\\RSignSendAPI'
+        \$backup = 'D:\\backup\\RSignSendAPI'
 
-        $timestamp = Get-Date -Format 'yyyyMMdd_HHmmss'
-        $backupPath = \"$backup`_$timestamp\"
+        \$timestamp = Get-Date -Format 'yyyyMMdd_HHmmss'
+        \$backupPath = \"\$backup`_\$timestamp\"
 
         Write-Output 'Taking backup...'
-        Copy-Item $dest $backupPath -Recurse -Force
+        Copy-Item \$dest \$backupPath -Recurse -Force
 
         Write-Output 'Deploying files...'
-        Copy-Item \"$source\*\" -Destination $dest -Recurse -Force
+        Copy-Item \"\$source\\*\" -Destination \$dest -Recurse -Force
 
         Write-Output 'Deployment completed successfully'
-<<<<<<< HEAD
       "
-=======
-      "
->>>>>>> 33805b5 (api6.09)
