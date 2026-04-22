@@ -84,20 +84,22 @@ deploy_job:
   variables:
     GIT_STRATEGY: none
   script:
-    - powershell -Command |
-        $ErrorActionPreference = 'Stop'
+    - |
+      $ErrorActionPreference = 'Stop'
 
-        $source = "$env:CI_PROJECT_DIR\publish"
-        $dest   = 'D:\RSignSendAPI'
-        $backup = 'D:\backup\RSignSendAPI'
+      $source = "$env:CI_PROJECT_DIR\publish"
+      $dest   = 'D:\RSignSendAPI'
+      $backup = 'D:\backup\RSignSendAPI'
 
-        $timestamp = Get-Date -Format 'yyyyMMdd_HHmmss'
-        $backupPath = "$backup`_$timestamp"
+      $timestamp = Get-Date -Format 'yyyyMMdd_HHmmss'
+      $backupPath = "$backup`_$timestamp"
 
-        Write-Output 'Taking backup...'
-        Copy-Item $dest $backupPath -Recurse -Force
+      Write-Output "Taking backup..."
+      if (Test-Path $dest) {
+          Copy-Item $dest $backupPath -Recurse -Force
+      }
 
-        Write-Output 'Deploying files...'
-        Copy-Item "$source\*" -Destination $dest -Recurse -Force
+      Write-Output "Deploying files..."
+      Copy-Item "$source\*" -Destination $dest -Recurse -Force
 
-        Write-Output 'Deployment completed successfully'
+      Write-Output "Deployment completed successfully"
