@@ -34,7 +34,7 @@ sonarqube_scan:
     - linux
   script:
     - set -xe
-    - echo "===== SONAR SCAN ====="
+    - echo "===== SONARQUBE SCAN ====="
  - dotnet tool install --global dotnet-sonarscanner || true
     - export PATH="$PATH:$HOME/.dotnet/tools"
 
