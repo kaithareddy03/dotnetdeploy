@@ -81,6 +81,8 @@ deploy_job:
     - windows
   dependencies:
     - package_job
+  variables:
+    GIT_STRATEGY: none   # 👈 THIS disables git clone
   script:
     - powershell -Command "
         \$ErrorActionPreference = 'Stop'
