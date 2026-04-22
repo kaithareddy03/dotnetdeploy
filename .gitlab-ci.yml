@@ -83,25 +83,30 @@ deploy_job:
     - package_job
   variables:
     GIT_STRATEGY: none
+
   script:
     - |
       $ErrorActionPreference = 'Stop'
 
       $source = "$env:CI_PROJECT_DIR\publish"
-      $dest   = 'D:\RSignSendAPI'
-      $backup = 'D:\backup\RSignSendAPI'
+      $dest = "D:\RSignSendAPI"
+      $backup = "D:\backup\RSignSendAPI"
 
-      $timestamp = Get-Date -Format 'yyyyMMdd_HHmmss'
+      $timestamp = Get-Date -Format "yyyyMMdd_HHmmss"
       $backupPath = "$backup`_$timestamp"
+
+      Write-Output "===== DEPLOYMENT START ====="
 
       Write-Output "Taking backup..."
       if (Test-Path $dest) {
           Copy-Item $dest $backupPath -Recurse -Force
+          Write-Output "Backup created at $backupPath"
+      } else {
+          Write-Output "No existing deployment found. Skipping backup."
       }
 
       Write-Output "Deploying files..."
       Copy-Item "$source\*" -Destination $dest -Recurse -Force
 
-     Write-Output "Deployment completed successfully"
-
-
+      Write-Output "Deployment completed successfully"
+      Write-Output "===== DEPLOYMENT END ====="
