@@ -101,5 +101,11 @@ deploy_job:
 
       Write-Output "Deploying files..."
       Copy-Item "$source\*" -Destination $dest -Recurse -Force
+<<<<<<< HEAD
 
       Write-Output "Deployment completed successfully"
+=======
+
+      Write-Output "Deployment completed successfully"
+
+>>>>>>> 517d4c2 (api6.12 updated pipeline)
