@@ -103,4 +103,8 @@ deploy_job:
         Copy-Item \"$source\*\" -Destination $dest -Recurse -Force
 
         Write-Output 'Deployment completed successfully'
+<<<<<<< HEAD
       "
+=======
+      "
+>>>>>>> 33805b5 (api6.09)
